@@ -1,0 +1,17 @@
+{
+  "name": "club.look-in",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@tsconfig/node12": "^1.0.9",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.2.2",
+    "@types/node": "^16.11.7",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "homey-rfdriver": "^3.2.5"
+  }
+}
