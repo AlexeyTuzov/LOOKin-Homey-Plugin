@@ -139,7 +139,7 @@ class TVDevice extends Homey.Device {
      */
     async onSettings({oldSettings: {}, newSettings: {}, changedKeys: {}}): Promise<string | void> {
         let name = this.getName();
-        this.log(`${name} settings where changed`);
+        this.log(`${name} settings were changed`);
     }
 
     /**
