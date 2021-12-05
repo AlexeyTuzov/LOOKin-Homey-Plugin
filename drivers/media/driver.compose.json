@@ -1,22 +1,22 @@
 {
   "name": {
-    "en": "media"
+    "en": "Media"
   },
   "class": "speaker",
   "capabilities": [
-    "button.mode",
     "onoff",
+    "volume_up",
+    "button",
     "volume_down",
-    "volume_mute",
-    "volume_up"
+    "volume_mute"
   ],
   "capabilitiesOptions": {
-    "button.mode": {
-      "maintenanceAction" : true,
-      "title": "Mode",
-      "desc": {"en": "Change the media source"}
+    "button": {
+      "type": "number",
+      "getable": "false",
+      "title": "Mode"
     }
-  }, 
+  },
   "platforms": [
     "local"
   ],
@@ -27,11 +27,11 @@
     "small": "{{driverAssetsPath}}/images/small.png",
     "large": "{{driverAssetsPath}}/images/large.png",
     "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
-  }, 
+  },
   "pair": [
     {
       "id": "list_devices",
-      "template": "list_devices", 
+      "template": "list_devices",
       "navigation": {
         "next": "add_devices"
       }

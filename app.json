@@ -63,6 +63,51 @@
     },
     {
       "name": {
+        "en": "Media"
+      },
+      "class": "speaker",
+      "capabilities": [
+        "onoff",
+        "volume_up",
+        "button",
+        "volume_down",
+        "volume_mute"
+      ],
+      "capabilitiesOptions": {
+        "button": {
+          "type": "number",
+          "getable": "false",
+          "title": "Mode"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/media/assets/images/small.png",
+        "large": "/drivers/media/assets/images/large.png",
+        "xlarge": "/drivers/media/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "media"
+    },
+    {
+      "name": {
         "en": "Switch"
       },
       "class": "button",
@@ -97,7 +142,7 @@
     },
     {
       "name": {
-        "en": "tv"
+        "en": "TV"
       },
       "class": "tv",
       "capabilities": [

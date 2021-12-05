@@ -8,7 +8,8 @@ export const emitter = new EventEmitter();
 const PORT = 61201;
 const IP = '255.255.255.255';
 const ALIVE = /LOOK\.?in:Alive!/;
-const UPDATED_DATA = /LOOK\.?in:Updated!\w+:data:/
+const UPDATED_DATA = /LOOK\.?in:Updated!\w+:data:/;
+const UPDATED_STATUS = /LOOK\.?in:Updated!\w+:87:FE:/;
 const DISCOVER = 'LOOK.in:Discover!';
 
 export const socket = dgram.createSocket({type: "udp4", reuseAddr: true});
@@ -22,13 +23,16 @@ const udpServer = async (): Promise<Device> => {
         });
 
         socket.on('message', async (msg, rinfo) => {
-            //console.log(`Message ${msg} has been received from port ${rinfo.port}, IP: ${rinfo.address}`);
+            console.log(`Message ${msg} has been received from port ${rinfo.port}, IP: ${rinfo.address}`);
             if (msg.toString().match(ALIVE)) {
                 let alivePayload = msg.toString().replace(ALIVE, '');
                 resolve(await getAllDataFromRemote(alivePayload));
             }
             if (msg.toString().match(UPDATED_DATA)) {
                 emitter.emit('updated_data', msg.toString());
+            }
+            if (msg.toString().match(UPDATED_STATUS)) {
+                emitter.emit('updated_status', msg.toString());
             }
         });
 
