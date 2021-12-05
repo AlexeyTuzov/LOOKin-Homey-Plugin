@@ -1,7 +1,7 @@
 import Homey from 'homey';
 import httpRequest from "../../utilites/httpRequest";
 import getPowerSwitchCommand from "../../utilites/getPowerSwitchCommand";
-import {RCInfo} from "../../utilites/interfaces";
+import {Functions, RCInfo} from "../../utilites/interfaces";
 import {emitter} from "../../utilites/UDPserver";
 
 class LightBulbDevice extends Homey.Device {
@@ -18,42 +18,68 @@ class LightBulbDevice extends Homey.Device {
         let ID: string = this.homey.env.LOOKinDevice.ID;
 
         /**
+         * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
+         * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
+         */
+        const actualiseStatus = async (): Promise<any> => {
+            let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+            if (RCInfo.success === 'false') {
+                this.homey.app.error('Failed to update status of device! No connection to remote');
+                throw new Error('Failed to update status of device! No connection to remote');
+            }
+            await this.setStoreValue('status', RCInfo.Status);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/));
+        }
+
+        await actualiseStatus();
+
+        /**
          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
-         * we need to check whether the characteristics of this device have been changed in LOOKin APP
+         * we need to check whether the characteristics or status of this device have been changed in LOOKin APP
          */
         const DATA_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:data:${UUID}`;
         emitter.on('updated_data', async (msg: string) => {
-            if(msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
-                let RCinfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-                await this.setStoreValue('functions', RCinfo.Functions);
+            if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
+                let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+                if (RCInfo.success === 'false') {
+                    this.homey.app.error('Failed to update functions of device! No connection to remote');
+                    throw new Error('Failed to update functions of device! No connection to remote');
+                }
+                await this.setStoreValue('functions', RCInfo.Functions);
+            }
+        });
+
+        const STATUS_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:87:FE:${UUID}`;
+        emitter.on('updated_status', async (msg: string) => {
+            if (msg.match(RegExp(STATUS_UPDATE_EXPRESSION))) {
+                await actualiseStatus();
             }
         });
 
         /**
-         * RC Info gets information about current state of remote controller, being saved inside the LOOKin remote device
-         * f.e. powerOn status - so we can set an actual value in after
+         * Next step, we need to describe the function, that is called each time, capability is being changed.
+         * It checks for the corresponding function of remote controller in LOOKin APP and trying to send a request.
+         * If no such function added in LOOKin APP or request has been rejected - the New error is thrown
          */
-        let RCinfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-        await this.setStoreValue('status', RCinfo.Status);
-        await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/1000/));
+        const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
+            if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
+                this.homey.app.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+                throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+            }
+            let reqCheck = await httpRequest(IP, `${path}${command}`);
+            if (JSON.parse(reqCheck).success === 'false') {
+                this.homey.app.error(`Failed to change the ${commName}! No connection to remote`);
+                throw new Error(`Failed to change the ${commName}! No connection to remote`);
+            }
+        }
 
         /**
          * exact commands may vary for different switches types (toggle, two singles or one single), so, we have to check it first
          * also, the inner APP state should not be mutated if HTTP request has been rejected - new Error is thrown in this case
          */
         this.registerCapabilityListener('onoff', async (value: boolean) => {
-
             let powerCommand = getPowerSwitchCommand(value, this.getStoreValue('functions'));
-            if (!powerCommand) {
-                this.homey.app.error('No power change command found! Please, create it in LOOKin APP first!');
-                throw new Error('No power change command found! Please, create it in LOOKin APP first!');
-            }
-
-            let changeValue = await httpRequest(IP, `${path}${powerCommand}`);
-            if (JSON.parse(changeValue).success === 'false') {
-                this.homey.app.error('Failed to change power state! No connection to remote');
-                throw new Error('Failed to change power state! No connection to remote');
-            }
+            await sendRequest(powerCommand, '', 'power', IP, path);
         });
 
         this.log(`${name} has been initialized`);

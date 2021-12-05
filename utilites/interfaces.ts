@@ -22,6 +22,7 @@ export interface RCInfo {
     Updated: string,
     Status: string,
     Functions?: Functions [] | undefined;
+    success?: string;
 }
 
 export interface Functions {

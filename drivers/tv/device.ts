@@ -18,104 +18,88 @@ class TVDevice extends Homey.Device {
         let ID: string = this.homey.env.LOOKinDevice.ID;
 
         /**
+         * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
+         * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
+         */
+        const actualiseStatus = async (): Promise<any> => {
+            let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+            if (RCInfo.success === 'false') {
+                this.homey.app.error('Failed to update status of device! No connection to remote');
+                throw new Error('Failed to update status of device! No connection to remote');
+            }
+            await this.setStoreValue('status', RCInfo.Status);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/11\w{1,2}/));
+            await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/));
+        }
+
+        await actualiseStatus();
+
+        /**
          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
-         * we need to check whether the characteristics of this device have been changed in LOOKin APP
+         * we need to check whether the characteristics or status of this device have been changed in LOOKin APP
          */
         const DATA_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:data:${UUID}`;
         emitter.on('updated_data', async (msg: string) => {
             if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
-                let RCinfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-                await this.setStoreValue('functions', RCinfo.Functions);
+                let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+                if (RCInfo.success === 'false') {
+                    this.homey.app.error('Failed to update functions of device! No connection to remote');
+                    throw new Error('Failed to update functions of device! No connection to remote');
+                }
+                await this.setStoreValue('functions', RCInfo.Functions);
+            }
+        });
+
+        const STATUS_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:87:FE:${UUID}`;
+        emitter.on('updated_status', async (msg: string) => {
+            if (msg.match(RegExp(STATUS_UPDATE_EXPRESSION))) {
+                await actualiseStatus();
             }
         });
 
         /**
-         * RC Info gets information about current state of remote controller, being saved inside the LOOKin remote device
-         * f.e. powerOn status - so we can set an actual value in after
+         * Next step, we need to describe the function, that is called each time, capability is being changed.
+         * It checks for the corresponding function of remote controller in LOOKin APP and trying to send a request.
+         * If no such function added in LOOKin APP or request has been rejected - the New error is thrown
          */
-        let RCinfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-        await this.setStoreValue('status', RCinfo.Status);
-        await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/11\w{1,2}/));
-        await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/));
-
+        const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
+            if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
+                this.homey.app.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+                throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+            }
+            let reqCheck = await httpRequest(IP, `${path}${command}`);
+            if (JSON.parse(reqCheck).success === 'false') {
+                this.homey.app.error(`Failed to change the ${commName}! No connection to remote`);
+                throw new Error(`Failed to change the ${commName}! No connection to remote`);
+            }
+        }
         /**
          * exact commands may vary for different switches types (toggle, two singles or one single), so, we have to check it first
          * also, the inner APP state should not be mutated if HTTP request has been rejected - new Error is thrown in this case
          */
         this.registerCapabilityListener('onoff', async (value: boolean) => {
-
             let powerCommand = getPowerSwitchCommand(value, this.getStoreValue('functions'));
-            if (!powerCommand) {
-                this.homey.app.error('No power change command found! Please, create it in LOOKin APP first!');
-                throw new Error('No power change command found! Please, create it in LOOKin APP first!');
-            }
-            let changeValue = await httpRequest(IP, `${path}${powerCommand}`);
-            if (JSON.parse(changeValue).success === 'false') {
-                this.homey.app.error('Failed to change power state! No connection to remote');
-                throw new Error('Failed to change power state! No connection to remote');
-            }
+            await sendRequest(powerCommand, '', 'power', IP, path);
         });
 
         this.registerCapabilityListener('channel_up', async () => {
-           if (!(this.getStoreValue('functions').find( (item: Functions) => item.Name === 'chup'))) {
-               this.homey.app.error('No channel up command found! Please, create it in LOOKin APP first!');
-               throw new Error('No channel up command found! Please, create it in LOOKin APP first!');
-           }
-           let channelUp = await httpRequest(IP, `${path}08FF`);
-           if (JSON.parse(channelUp).success === 'false') {
-               this.homey.app.error('Failed to change the channel! No connection to remote');
-               throw new Error('Failed to change the channel! No connection to remote');
-           }
+            await sendRequest('08FF', 'chup', 'channel up', IP, path);
         });
 
         this.registerCapabilityListener('channel_down', async () => {
-            if (!(this.getStoreValue('functions').find( (item: Functions) => item.Name === 'chdown'))) {
-                this.homey.app.error('No channel up command found! Please, create it in LOOKin APP first!');
-                throw new Error('No channel up command found! Please, create it in LOOKin APP first!');
-            }
-            let channelDown = await httpRequest(IP, `${path}09FF`);
-            if (JSON.parse(channelDown).success === 'false') {
-                this.homey.app.error('Failed to change the channel! No connection to remote');
-                throw new Error('Failed to change the channel! No connection to remote');
-            }
+            await sendRequest('09FF', 'chdown', 'channel down', IP, path);
         });
 
         this.registerCapabilityListener('volume_up', async () => {
-            await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/));
-            if (!(this.getStoreValue('functions').find( (item: Functions) => item.Name === 'volup'))) {
-                this.homey.app.error('No volume up command found! Please, create it in LOOKin APP first!');
-                throw new Error('No volume up command found! Please, create it in LOOKin APP first!');
-            }
-            let volumeUp = await httpRequest(IP, `${path}06FF`);
-            if (JSON.parse(volumeUp).success === 'false') {
-                this.homey.app.error('Failed to change the volume! No connection to remote');
-                throw new Error('Failed to change the volume! No connection to remote');
-            }
+            await sendRequest('06FF', 'volup', 'volume up', IP, path);
         });
 
         this.registerCapabilityListener('volume_down', async () => {
-            await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/));
-            if (!(this.getStoreValue('functions').find( (item: Functions) => item.Name === 'voldown'))) {
-                this.homey.app.error('No volume down command found! Please, create it in LOOKin APP first!');
-                throw new Error('No volume down command found! Please, create it in LOOKin APP first!');
-            }
-            let volumeDown = await httpRequest(IP, `${path}07FF`);
-            if (JSON.parse(volumeDown).success === 'false') {
-                this.homey.app.error('Failed to change the volume! No connection to remote');
-                throw new Error('Failed to change the volume! No connection to remote');
-            }
+            await sendRequest('07FF', 'voldown', 'volume down', IP, path);
         });
 
         this.registerCapabilityListener('volume_mute', async () => {
-            if (!(this.getStoreValue('functions').find( (item: Functions) => item.Name === 'mute'))) {
-                this.homey.app.error('No volume mute command found! Please, create it in LOOKin APP first!');
-                throw new Error('No volume mute command found! Please, create it in LOOKin APP first!');
-            }
-            let volumeMute = await httpRequest(IP, `${path}05FF`);
-            if (JSON.parse(volumeMute).success === 'false') {
-                this.homey.app.error('Failed to mute! No connection to remote');
-                throw new Error('Failed to mute! No connection to remote');
-            }
+            await sendRequest('05FF', 'mute', 'volume mute', IP, path);
         });
 
         this.log(`${name} has been initialized`);

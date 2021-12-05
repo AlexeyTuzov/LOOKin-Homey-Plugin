@@ -23,7 +23,7 @@ const udpServer = async (): Promise<Device> => {
         });
 
         socket.on('message', async (msg, rinfo) => {
-            console.log(`Message ${msg} has been received from port ${rinfo.port}, IP: ${rinfo.address}`);
+            //console.log(`Message ${msg} has been received from port ${rinfo.port}, IP: ${rinfo.address}`);
             if (msg.toString().match(ALIVE)) {
                 let alivePayload = msg.toString().replace(ALIVE, '');
                 resolve(await getAllDataFromRemote(alivePayload));

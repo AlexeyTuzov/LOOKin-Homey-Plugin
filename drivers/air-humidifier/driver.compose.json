@@ -1,20 +1,17 @@
 {
   "name": {
-    "en": "Media"
+    "en": "Air Humidifier"
   },
-  "class": "speaker",
+  "class": "other",
   "capabilities": [
     "onoff",
-    "volume_up",
-    "button",
-    "volume_down",
-    "volume_mute"
+    "button"
   ],
   "capabilitiesOptions": {
     "button": {
-      "type": "number",
+      "title": "Mode",
       "getable": false,
-      "title": "Mode"
+      "type": "number"
     }
   },
   "platforms": [
