@@ -1,6 +1,5 @@
 import Homey from 'homey';
 import udpServer from './utilites/UDPserver'
-import {Device} from "./utilites/interfaces";
 
 export class LOOKinApp extends Homey.App {
 

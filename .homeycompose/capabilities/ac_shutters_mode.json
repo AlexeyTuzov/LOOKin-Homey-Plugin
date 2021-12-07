@@ -1,0 +1,11 @@
+{
+  "title": { "en": "ac_shutters_mode"},
+  "type": "enum",
+  "uiComponent": "picker",
+  "getable": false,
+  "setable": true,
+  "values": [
+    { "id": "0", "title": { "en": "stop"}},
+    { "id": "1", "title": { "en": "move"}}
+  ]
+}

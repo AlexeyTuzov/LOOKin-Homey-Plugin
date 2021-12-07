@@ -1,0 +1,15 @@
+{
+  "title": { "en": "ac_mode"},
+  "type": "enum",
+  "uiComponent": "picker",
+  "getable": false,
+  "setable": true,
+  "values": [
+    { "id": "0", "title": { "en": "off"}},
+    { "id": "1", "title": { "en": "auto"}},
+    { "id": "2", "title": { "en": "cool"}},
+    { "id": "3", "title": { "en": "heat"}},
+    { "id": "4", "title": { "en": "dry"}},
+    { "id": "5", "title": { "en": "fan_only"}}
+  ]
+}

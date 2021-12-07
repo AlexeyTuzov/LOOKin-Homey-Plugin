@@ -16,7 +16,9 @@
   "category": [
     "tools"
   ],
-  "permissions": [],
+  "permissions": [
+    "homey:manager:api"
+  ],
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
@@ -26,42 +28,100 @@
     "name": "Alex Tuzov",
     "email": "aresnexus@rambler.ru"
   },
-  "capabilities": [
-    {
-      "title": { "en": "ac_mode"},
-      "type": "enum",
-      "uiComponent": "picker",
-      "values": [
-        { "id": 0, "title": { "en": "off"}},
-        { "id": 1, "title": { "en": "auto"}},
-        { "id": 2, "title": { "en": "cool"}},
-        { "id": 3, "title": { "en": "heat"}},
-        { "id": 4, "title": { "en": "dry"}},
-        { "id": 5, "title": { "en": "fan_only"}}
-      ]
-    },
-    {
-      "title": { "en": "ac_fan_mode"},
-      "type": "enum",
-      "uiComponent": "picker",
-      "values": [
-        { "id": 0, "title": { "en": "auto"}},
-        { "id": 1, "title": { "en": "low"}},
-        { "id": 2, "title": { "en": "mid"}},
-        { "id": 3, "title": { "en": "high"}}
-      ]
-    },
-    {
-      "title": { "en": "ac_shutters_mode"},
-      "type": "enum",
-      "uiComponent": "picker",
-      "values": [
-        { "id": 0, "title": { "en": "stop"}},
-        { "id": 1, "title": { "en": "move"}}
-      ]
-    }
-  ],
   "drivers": [
+    {
+      "name": {
+        "en": "Air Conditioner"
+      },
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "ac_mode",
+        "target_temperature.ac",
+        "measure_temperature.ac",
+        "ac_fan_mode",
+        "ac_shutters_mode"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature.ac": {
+          "min": 16,
+          "max": 32,
+          "step": 1
+        },
+        "measure_temperature.ac": {
+          "min": 16,
+          "max": 32,
+          "step": 1
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/air-conditioner/assets/images/small.png",
+        "large": "/drivers/air-conditioner/assets/images/large.png",
+        "xlarge": "/drivers/air-conditioner/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "air-conditioner"
+    },
+    {
+      "name": {
+        "en": "Air Humidifier"
+      },
+      "class": "other",
+      "capabilities": [
+        "onoff",
+        "button"
+      ],
+      "capabilitiesOptions": {
+        "button": {
+          "title": "Mode",
+          "getable": false,
+          "type": "number"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/air-humidifier/assets/images/small.png",
+        "large": "/drivers/air-humidifier/assets/images/large.png",
+        "xlarge": "/drivers/air-humidifier/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "air-humidifier"
+    },
     {
       "name": {
         "en": "Light"
@@ -111,7 +171,7 @@
       "capabilitiesOptions": {
         "button": {
           "type": "number",
-          "getable": "false",
+          "getable": false,
           "title": "Mode"
         }
       },
@@ -214,5 +274,112 @@
       ],
       "id": "tv"
     }
-  ]
+  ],
+  "capabilities": {
+    "ac_fan_mode": {
+      "title": {
+        "en": "ac_fan_mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "auto"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "low"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "mid"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "high"
+          }
+        }
+      ]
+    },
+    "ac_mode": {
+      "title": {
+        "en": "ac_mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "off"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "auto"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "cool"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "heat"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "dry"
+          }
+        },
+        {
+          "id": "5",
+          "title": {
+            "en": "fan_only"
+          }
+        }
+      ]
+    },
+    "ac_shutters_mode": {
+      "title": {
+        "en": "ac_shutters_mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "stop"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "move"
+          }
+        }
+      ]
+    }
+  }
 }
