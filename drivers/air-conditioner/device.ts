@@ -1,10 +1,10 @@
 import Homey from 'homey';
-import { Functions, RCInfo } from "../../utilites/interfaces";
-import httpRequest from "../../utilites/httpRequest";
-import getPowerSwitchCommand from "../../utilites/getPowerSwitchCommand";
+import getPowerSwitchCommand from '../../utilites/getPowerSwitchCommand';
+import httpRequest from '../../utilites/httpRequest';
+import { Functions, RCInfo } from '../../utilites/interfaces';
 import { emitter } from '../../utilites/UDPserver';
 
-class HumidifierDevice extends Homey.Device {
+class AirConditionerDevice extends Homey.Device {
 
   /**
    * onInit is called when the device is initialized.
@@ -13,14 +13,16 @@ class HumidifierDevice extends Homey.Device {
 
     let UUID: string = this.getStoreValue('UUID');
     let IP: string = this.getStoreValue('IP');
-    let path: string = `/commands/ir/localremote/${UUID}`;
+    let codeset = this.getStoreValue('codeset');
+    let path: string = `/commands/ir/ac/${codeset}`;
     let name: string = this.getName();
     let ID: string = this.homey.env.LOOKinDevice.ID;
 
+
     /**
-     * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
-     * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
-     */
+         * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
+         * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
+         */
     const actualiseStatus = async (): Promise<any> => {
       let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
       if (RCInfo.success === 'false') {
@@ -28,24 +30,28 @@ class HumidifierDevice extends Homey.Device {
         throw new Error('Failed to update status of device! No connection to remote');
       }
       await this.setStoreValue('status', RCInfo.Status).catch(this.error);
-      await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/)).catch(this.error);
+      await this.setCapabilityValue('onoff', !!this.getStoreValue('status')[0].match(/^[1-5]/)).catch(this.error);
+      await this.setCapabilityValue('ac_mode', this.getStoreValue('status')[0]).catch(this.error);
+      await this.setCapabilityValue('target_temperature.ac', parseInt(this.getStoreValue('status')[1], 16)).catch(this.error);
+      await this.setCapabilityValue('ac_fan_mode', this.getStoreValue('status')[2]).catch(this.error);
+      await this.setCapabilityValue('ac_shutters_mode', this.getStoreValue('status')[3]).catch(this.error);
     }
 
     await actualiseStatus();
 
     /**
-     * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
-     * we need to check whether the characteristics or status of this device have been changed in LOOKin APP
-     */
+       * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
+       * we need to check whether the characteristics or status or codeset of this device have been changed in LOOKin APP
+       */
     const DATA_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:data:${UUID}`;
     emitter.on('updated_data', async (msg: string) => {
       if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
         let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
         if (RCInfo.success === 'false') {
-          this.error('Failed to update functions of device! No connection to remote');
-          throw new Error('Failed to update functions of device! No connection to remote');
+          this.error('Failed to update codeset of device! No connection to remote');
+          throw new Error('Failed to update codeset of device! No connection to remote');
         }
-        await this.setStoreValue('functions', RCInfo.Functions).catch(this.error);
+        await this.setStoreValue('codeset', RCInfo.Extra).catch(this.error);
       }
     });
 
@@ -58,14 +64,8 @@ class HumidifierDevice extends Homey.Device {
 
     /**
      * Next step, we need to describe the function, that is called each time, capability is being changed.
-     * It checks for the corresponding function of remote controller in LOOKin APP and trying to send a request.
-     * If no such function added in LOOKin APP or request has been rejected - the New error is thrown
      */
-    const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
-      if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
-        this.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
-        throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
-      }
+    const sendRequest = async (command: string, commName: string, IP: string, path: string): Promise<any> => {
       let reqCheck = await httpRequest(IP, `${path}${command}`);
       if (JSON.parse(reqCheck).success === 'false') {
         this.error(`Failed to change the ${commName}! No connection to remote`);
@@ -73,17 +73,35 @@ class HumidifierDevice extends Homey.Device {
       }
     }
 
-    /**
-     * exact commands may vary for different switches types (toggle, two singles or one single), so, we have to check it first
-     * also, the inner APP state should not be mutated if HTTP request has been rejected - new Error is thrown in this case
-     */
     this.registerCapabilityListener('onoff', async (value: boolean) => {
-      let powerCommand = getPowerSwitchCommand(value, this.getStoreValue('functions'));
-      await sendRequest(powerCommand, '', 'power', IP, path);
+      let status: string = this.getStoreValue('status');
+      let powerCommand: string = status[0] === '0' ? 'FFF0' : '0' + status[1] + status[2] + status[3];
+      await sendRequest(powerCommand, 'power status', IP, path);
     });
-    //probably, here should be a picker instead of button!
-    this.registerCapabilityListener('button', async () => {
-      await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
+
+    this.registerCapabilityListener('ac_mode', async (value) => {
+      let status: string = this.getStoreValue('status');
+      let command: string = value.toString() + status[1] + status[2] + status[3];
+      await sendRequest(command, 'Air Conditioner Mode', IP, path);
+    });
+
+    this.registerCapabilityListener('target_temperature.ac', async (value) => {
+      let status: string = this.getStoreValue('status');
+      let shiftHex: string = (value - 16).toString(16);
+      let command: string = status[0] + shiftHex + status[2] + status[3];
+      await sendRequest(command, 'Target Temperature', IP, path);
+    });
+
+    this.registerCapabilityListener('ac_fan_mode', async (value) => {
+      let status: string = this.getStoreValue('status');
+      let command: string = status[0] + status[1] + value.toString() + status[3];
+      await sendRequest(command, 'Air Conditioner Fan Mode', IP, path);
+    });
+
+    this.registerCapabilityListener('ac_shutters_mode', async (value) => {
+      let status: string = this.getStoreValue('status');
+      let command: string = status[0] + status[1] + status[2] + value.toString();
+      await sendRequest(command, 'Air Conditioner Shutters Mode', IP, path);
     });
 
     this.log(`${name} has been initialized`);
@@ -129,4 +147,4 @@ class HumidifierDevice extends Homey.Device {
 
 }
 
-module.exports = HumidifierDevice;
+module.exports = AirConditionerDevice;

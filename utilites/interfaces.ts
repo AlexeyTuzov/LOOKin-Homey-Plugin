@@ -17,28 +17,30 @@ export interface RemoteController {
 }
 
 export interface RCInfo {
-    Type: string,
-    Name: string,
-    Updated: string,
-    Status: string,
+    Type: string;
+    Name: string;
+    Updated: string;
+    Status: string;
     Functions?: Functions [] | undefined;
     success?: string;
+    Extra?: string;
 }
 
 export interface Functions {
-    Name: string,
-    Type: string
+    Name: string;
+    Type: string;
 }
 
 export interface pairingInfo {
     name: string;
     data: {
-        id: string
+        id: string;
     },
     store: {
-        UUID: string,
-        functions: Functions[] | undefined,
-        IP: string,
-        status: string
+        UUID: string;
+        functions?: Functions[] | undefined;
+        IP: string;
+        status: string;
+        codeset?: string;
     };
 }

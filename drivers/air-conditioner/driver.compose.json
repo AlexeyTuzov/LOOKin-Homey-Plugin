@@ -1,0 +1,50 @@
+{
+  "name": {
+    "en": "Air Conditioner"
+  },
+  "class": "other",
+  "capabilities": [
+    "onoff",
+    "ac_mode",
+    "target_temperature.ac",
+    "measure_temperature.ac",
+    "ac_fan_mode",
+    "ac_shutters_mode"
+  ],
+  "capabilitiesOptions": {
+    "target_temperature.ac": {
+      "min": 16,
+      "max": 32,
+      "step": 1
+    },
+    "measure_temperature.ac": {
+      "min": 16,
+      "max": 32,
+      "step": 1
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "lan"
+  ],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

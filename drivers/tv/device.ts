@@ -24,12 +24,12 @@ class TVDevice extends Homey.Device {
         const actualiseStatus = async (): Promise<any> => {
             let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
             if (RCInfo.success === 'false') {
-                this.homey.app.error('Failed to update status of device! No connection to remote');
+                this.error('Failed to update status of device! No connection to remote');
                 throw new Error('Failed to update status of device! No connection to remote');
             }
-            await this.setStoreValue('status', RCInfo.Status);
-            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/11\w{1,2}/));
-            await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/));
+            await this.setStoreValue('status', RCInfo.Status).catch(this.error);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/11\w{1,2}/)).catch(this.error);
+            await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/)).catch(this.error);
         }
 
         await actualiseStatus();
@@ -43,10 +43,10 @@ class TVDevice extends Homey.Device {
             if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
                 let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
                 if (RCInfo.success === 'false') {
-                    this.homey.app.error('Failed to update functions of device! No connection to remote');
+                    this.error('Failed to update functions of device! No connection to remote');
                     throw new Error('Failed to update functions of device! No connection to remote');
                 }
-                await this.setStoreValue('functions', RCInfo.Functions);
+                await this.setStoreValue('functions', RCInfo.Functions).catch(this.error);
             }
         });
 
@@ -64,12 +64,12 @@ class TVDevice extends Homey.Device {
          */
         const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
             if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
-                this.homey.app.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+                this.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
                 throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
             }
             let reqCheck = await httpRequest(IP, `${path}${command}`);
             if (JSON.parse(reqCheck).success === 'false') {
-                this.homey.app.error(`Failed to change the ${commName}! No connection to remote`);
+                this.error(`Failed to change the ${commName}! No connection to remote`);
                 throw new Error(`Failed to change the ${commName}! No connection to remote`);
             }
         }

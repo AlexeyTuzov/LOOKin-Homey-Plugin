@@ -26,6 +26,41 @@
     "name": "Alex Tuzov",
     "email": "aresnexus@rambler.ru"
   },
+  "capabilities": [
+    {
+      "title": { "en": "ac_mode"},
+      "type": "enum",
+      "uiComponent": "picker",
+      "values": [
+        { "id": 0, "title": { "en": "off"}},
+        { "id": 1, "title": { "en": "auto"}},
+        { "id": 2, "title": { "en": "cool"}},
+        { "id": 3, "title": { "en": "heat"}},
+        { "id": 4, "title": { "en": "dry"}},
+        { "id": 5, "title": { "en": "fan_only"}}
+      ]
+    },
+    {
+      "title": { "en": "ac_fan_mode"},
+      "type": "enum",
+      "uiComponent": "picker",
+      "values": [
+        { "id": 0, "title": { "en": "auto"}},
+        { "id": 1, "title": { "en": "low"}},
+        { "id": 2, "title": { "en": "mid"}},
+        { "id": 3, "title": { "en": "high"}}
+      ]
+    },
+    {
+      "title": { "en": "ac_shutters_mode"},
+      "type": "enum",
+      "uiComponent": "picker",
+      "values": [
+        { "id": 0, "title": { "en": "stop"}},
+        { "id": 1, "title": { "en": "move"}}
+      ]
+    }
+  ],
   "drivers": [
     {
       "name": {
