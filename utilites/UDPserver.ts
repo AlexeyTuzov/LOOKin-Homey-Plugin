@@ -10,6 +10,7 @@ const IP = '255.255.255.255';
 const ALIVE = /LOOK\.?in:Alive!/;
 const UPDATED_DATA = /LOOK\.?in:Updated!\w+:data:/;
 const UPDATED_STATUS = /LOOK\.?in:Updated!\w+:87:FE:/;
+const UPDATED_METEO = /LOOK\.?in:Updated!\w+:FE:00:\w{8}/;
 const DISCOVER = 'LOOK.in:Discover!';
 
 export const socket = dgram.createSocket({type: "udp4", reuseAddr: true});
@@ -33,6 +34,9 @@ const udpServer = async (): Promise<Device> => {
             }
             if (msg.toString().match(UPDATED_STATUS)) {
                 emitter.emit('updated_status', msg.toString());
+            }
+            if (msg.toString().match(UPDATED_METEO)) {
+                emitter.emit('updated_meteo', msg.toString());
             }
         });
 

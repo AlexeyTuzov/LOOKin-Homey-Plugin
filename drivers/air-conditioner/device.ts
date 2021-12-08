@@ -1,7 +1,6 @@
 import Homey from 'homey';
-import getPowerSwitchCommand from '../../utilites/getPowerSwitchCommand';
 import httpRequest from '../../utilites/httpRequest';
-import { Functions, RCInfo } from '../../utilites/interfaces';
+import { RCInfo } from '../../utilites/interfaces';
 import { emitter } from '../../utilites/UDPserver';
 
 class AirConditionerDevice extends Homey.Device {
@@ -18,7 +17,6 @@ class AirConditionerDevice extends Homey.Device {
     let name: string = this.getName();
     let ID: string = this.homey.env.LOOKinDevice.ID;
 
-
     /**
          * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
          * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
@@ -32,7 +30,7 @@ class AirConditionerDevice extends Homey.Device {
       await this.setStoreValue('status', RCInfo.Status).catch(this.error);
       await this.setCapabilityValue('onoff', !!this.getStoreValue('status')[0].match(/^[1-5]/)).catch(this.error);
       await this.setCapabilityValue('ac_mode', this.getStoreValue('status')[0]).catch(this.error);
-      await this.setCapabilityValue('target_temperature.ac', parseInt(this.getStoreValue('status')[1], 16)).catch(this.error);
+      await this.setCapabilityValue('target_temperature.ac', parseInt(this.getStoreValue('status')[1], 16) + 16).catch(this.error);
       await this.setCapabilityValue('ac_fan_mode', this.getStoreValue('status')[2]).catch(this.error);
       await this.setCapabilityValue('ac_shutters_mode', this.getStoreValue('status')[3]).catch(this.error);
     }
@@ -59,6 +57,14 @@ class AirConditionerDevice extends Homey.Device {
     emitter.on('updated_status', async (msg: string) => {
       if (msg.match(RegExp(STATUS_UPDATE_EXPRESSION))) {
         await actualiseStatus();
+      }
+    });
+
+    const METEO_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:FE:00:\w{8}`;
+    emitter.on('updated_meteo', async (msg: string) => {
+      if (msg.match(RegExp(METEO_UPDATE_EXPRESSION))) {
+        let measuredTemp = parseInt(msg.slice(-8, -4), 16);
+        await this.setCapabilityValue('measure_temperature.ac', measuredTemp).catch(this.error);
       }
     });
 
