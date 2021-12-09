@@ -17,8 +17,8 @@ class HumidifierDriver extends Homey.Driver {
   async onPairListDevices() {
     let devicesList: pairingInfo[] = [];
     try {
-      let lights = this.homey.env.LOOKinDevice.savedRC?.filter((item: RemoteController) => item.Type === '04');
-      lights?.forEach((item: RemoteController) => devicesList.push({
+      let airHumidifiers = this.homey.env.LOOKinDevice.savedRC?.filter((item: RemoteController) => item.Type === '04');
+      airHumidifiers?.forEach((item: RemoteController) => devicesList.push({
         name: `${item.deviceInfo.Name}`,
         data: {
           id: `${item.deviceInfo.Name}${item.UUID}`

@@ -44,3 +44,20 @@ export interface pairingInfo {
         codeset?: string;
     };
 }
+
+export interface device {
+    Type: string,
+    MRDC: string,
+    Status: string,
+    ID: string,
+    Name: string,
+    Time: string,
+    Timezone: string,
+    PowerMode: string,
+    CurrentVoltage: string,
+    Firmware: string,
+    Temperature: string,
+    HomeKit: string,
+    EcoMode: string,
+    SensorMode: string
+}

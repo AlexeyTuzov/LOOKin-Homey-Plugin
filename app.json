@@ -48,10 +48,8 @@
           "max": 32,
           "step": 1
         },
-        "measure_temperature.ac": {
-          "min": 16,
-          "max": 32,
-          "step": 1
+        "onoff": {
+          "getable": false
         }
       },
       "platforms": [
@@ -200,6 +198,41 @@
         }
       ],
       "id": "media"
+    },
+    {
+      "name": {
+        "en": "Meteo Sensors"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_humidity",
+        "measure_temperature"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/meteo-sensors/assets/images/small.png",
+        "large": "/drivers/meteo-sensors/assets/images/large.png",
+        "xlarge": "/drivers/meteo-sensors/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "meteo-sensors"
     },
     {
       "name": {

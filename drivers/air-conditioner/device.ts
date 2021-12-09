@@ -63,7 +63,7 @@ class AirConditionerDevice extends Homey.Device {
     const METEO_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:FE:00:\w{8}`;
     emitter.on('updated_meteo', async (msg: string) => {
       if (msg.match(RegExp(METEO_UPDATE_EXPRESSION))) {
-        let measuredTemp = parseInt(msg.slice(-8, -4), 16);
+        let measuredTemp = parseInt(msg.slice(-8, -4), 16) / 10;
         await this.setCapabilityValue('measure_temperature.ac', measuredTemp).catch(this.error);
       }
     });
@@ -79,7 +79,7 @@ class AirConditionerDevice extends Homey.Device {
       }
     }
 
-    this.registerCapabilityListener('onoff', async (value: boolean) => {
+    this.registerCapabilityListener('onoff', async () => {
       let status: string = this.getStoreValue('status');
       let powerCommand: string = status[0] === '0' ? 'FFF0' : '0' + status[1] + status[2] + status[3];
       await sendRequest(powerCommand, 'power status', IP, path);

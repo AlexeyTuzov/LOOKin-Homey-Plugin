@@ -17,8 +17,8 @@ class AirConditionerDriver extends Homey.Driver {
   async onPairListDevices() {
     let devicesList: pairingInfo[] = [];
     try {
-      let media = this.homey.env.LOOKinDevice.savedRC?.filter((item: RemoteController) => item.Type === 'EF');
-      media?.forEach((item: RemoteController) => devicesList.push({
+      let airConditioners = this.homey.env.LOOKinDevice.savedRC?.filter((item: RemoteController) => item.Type === 'EF');
+      airConditioners?.forEach((item: RemoteController) => devicesList.push({
         name: `${item.deviceInfo.Name}`,
         data: {
           id: `${item.deviceInfo.Name}${item.UUID}`

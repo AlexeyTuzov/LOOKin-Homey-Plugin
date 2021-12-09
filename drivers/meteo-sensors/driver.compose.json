@@ -1,26 +1,12 @@
 {
   "name": {
-    "en": "Air Conditioner"
+    "en": "Meteo Sensors"
   },
-  "class": "other",
+  "class": "sensor",
   "capabilities": [
-    "onoff",
-    "ac_mode",
-    "target_temperature.ac",
-    "measure_temperature.ac",
-    "ac_fan_mode",
-    "ac_shutters_mode"
+    "measure_humidity",
+    "measure_temperature"
   ],
-  "capabilitiesOptions": {
-    "target_temperature.ac": {
-      "min": 16,
-      "max": 32,
-      "step": 1
-    },
-    "onoff": {
-      "getable": false
-    }
-  },
   "platforms": [
     "local"
   ],
