@@ -12,7 +12,7 @@ class TVDevice extends Homey.Device {
     async onInit() {
 
         let UUID: string = this.getStoreValue('UUID');
-        let IP: string = this.getStoreValue('IP');
+        let IP: string = this.homey.env.LOOKinDevice.IP;
         let path: string = `/commands/ir/localremote/${UUID}`;
         let name: string = this.getName();
         let ID: string = this.homey.env.LOOKinDevice.ID;

@@ -26,7 +26,6 @@ class LightBulbDriver extends Homey.Driver {
                 store: {
                     UUID: `${item.UUID}`,
                     functions: item.deviceInfo.Functions,
-                    IP: item.IP,
                     status: item.deviceInfo.Status
                 }
             }));

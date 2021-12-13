@@ -39,7 +39,6 @@ export interface pairingInfo {
     store: {
         UUID: string;
         functions?: Functions[] | undefined;
-        IP: string;
         status: string;
         codeset?: string;
     };
