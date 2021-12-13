@@ -1,0 +1,8 @@
+{
+  "title": { "en": "Mode"},
+  "type": "boolean",
+  "uiComponent": "button",
+  "getable": false,
+  "setable": true,
+  "icon": "assets/images/mode.svg"
+}

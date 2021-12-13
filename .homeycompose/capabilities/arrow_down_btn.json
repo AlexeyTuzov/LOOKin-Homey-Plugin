@@ -1,0 +1,8 @@
+{
+  "title": { "en": "Down"},
+  "type": "boolean",
+  "uiComponent": "button",
+  "getable": false,
+  "setable": true,
+  "icon": "assets/images/arrow_down.svg"
+}

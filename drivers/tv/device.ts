@@ -102,6 +102,34 @@ class TVDevice extends Homey.Device {
             await sendRequest('05FF', 'mute', 'volume mute', IP, path);
         });
 
+        this.registerCapabilityListener('arrow_up_btn.tv', async () => {
+           await sendRequest('0C02', 'cursor', 'arrow up', IP, path);
+        });
+
+        this.registerCapabilityListener('arrow_down_btn.tv', async () => {
+           await sendRequest('0C04', 'cursor', 'arrow down', IP, path);
+        });
+
+        this.registerCapabilityListener('arrow_left_btn.tv', async () => {
+           await sendRequest('0C01', 'cursor', 'arrow left', IP, path);
+        });
+
+        this.registerCapabilityListener('arrow_right_btn.tv', async () => {
+            await sendRequest('0C03', 'cursor', 'arrow right', IP, path);
+        });
+
+        this.registerCapabilityListener('select_btn.tv', async () => {
+            await sendRequest('0C00', 'cursor', 'cursor select', IP, path);
+        });
+
+        this.registerCapabilityListener('menu_btn.tv', async () => {
+            await sendRequest('0DFF', 'menu', 'menu', IP, path);
+        });
+
+        this.registerCapabilityListener('mode_btn.tv', async () => {
+           await sendRequest('04FF', 'mode', 'mode', IP, path);
+        });
+
         this.log(`${name} has been initialized`);
     }
 

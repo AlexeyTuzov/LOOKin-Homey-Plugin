@@ -6,7 +6,7 @@ import {emitter} from '../../utilites/UDPserver';
 
 class SwitchDevice extends Homey.Device {
 
-     /**
+    /**
      * onInit is called when the device is initialized.
      */
     async onInit() {
@@ -17,61 +17,61 @@ class SwitchDevice extends Homey.Device {
         let name: string = this.getName();
         let ID: string = this.homey.env.LOOKinDevice.ID;
 
-         /**
-          * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
-          * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
-          */
-         const actualiseStatus = async (): Promise<any> => {
-             let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-             if (RCInfo.success === 'false') {
-                 this.error('Failed to update status of device! No connection to remote');
-                 throw new Error('Failed to update status of device! No connection to remote');
-             }
-             await this.setStoreValue('status', RCInfo.Status).catch(this.error);
-             await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/)).catch(this.error);
-         }
+        /**
+         * The following function gets information about current state of remote controller, being saved inside the LOOKin remote device
+         * f.e. powerOn status - and set an actual value in store of the driver. It is called on init of device and in case of it's update.
+         */
+        const actualiseStatus = async (): Promise<any> => {
+            let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+            if (RCInfo.success === 'false') {
+                this.error('Failed to update status of device! No connection to remote');
+                throw new Error('Failed to update status of device! No connection to remote');
+            }
+            await this.setStoreValue('status', RCInfo.Status).catch(this.error);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/)).catch(this.error);
+        }
 
-         await actualiseStatus();
+        await actualiseStatus();
 
-         /**
-          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
-          * we need to check whether the characteristics or status of this device have been changed in LOOKin APP
-          */
-         const DATA_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:data:${UUID}`;
-         emitter.on('updated_data', async (msg: string) => {
-             if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
-                 let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
-                 if (RCInfo.success === 'false') {
-                     this.error('Failed to update functions of device! No connection to remote');
-                     throw new Error('Failed to update functions of device! No connection to remote');
-                 }
-                 await this.setStoreValue('functions', RCInfo.Functions).catch(this.error);
-             }
-         });
+        /**
+         * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
+         * we need to check whether the characteristics or status of this device have been changed in LOOKin APP
+         */
+        const DATA_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:data:${UUID}`;
+        emitter.on('updated_data', async (msg: string) => {
+            if (msg.match(RegExp(DATA_UPDATE_EXPRESSION))) {
+                let RCInfo: RCInfo = JSON.parse(await httpRequest(IP, `/data/${UUID}`));
+                if (RCInfo.success === 'false') {
+                    this.error('Failed to update functions of device! No connection to remote');
+                    throw new Error('Failed to update functions of device! No connection to remote');
+                }
+                await this.setStoreValue('functions', RCInfo.Functions).catch(this.error);
+            }
+        });
 
-         const STATUS_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:87:FE:${UUID}`;
-         emitter.on('updated_status', async (msg: string) => {
-             if (msg.match(RegExp(STATUS_UPDATE_EXPRESSION))) {
-                 await actualiseStatus();
-             }
-         });
+        const STATUS_UPDATE_EXPRESSION: string = String.raw`LOOK\.?in:Updated!${ID}:87:FE:${UUID}`;
+        emitter.on('updated_status', async (msg: string) => {
+            if (msg.match(RegExp(STATUS_UPDATE_EXPRESSION))) {
+                await actualiseStatus();
+            }
+        });
 
-         /**
-          * Next step, we need to describe the function, that is called each time, capability is being changed.
-          * It checks for the corresponding function of remote controller in LOOKin APP and trying to send a request.
-          * If no such function added in LOOKin APP or request has been rejected - the New error is thrown
-          */
-         const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
-             if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
-                 this.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
-                 throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
-             }
-             let reqCheck = await httpRequest(IP, `${path}${command}`);
-             if (JSON.parse(reqCheck).success === 'false') {
-                 this.error(`Failed to change the ${commName}! No connection to remote`);
-                 throw new Error(`Failed to change the ${commName}! No connection to remote`);
-             }
-         }
+        /**
+         * Next step, we need to describe the function, that is called each time, capability is being changed.
+         * It checks for the corresponding function of remote controller in LOOKin APP and trying to send a request.
+         * If no such function added in LOOKin APP or request has been rejected - the New error is thrown
+         */
+        const sendRequest = async (command: string, alias: string, commName: string, IP: string, path: string): Promise<any> => {
+            if (alias && !(this.getStoreValue('functions').find((item: Functions) => item.Name === alias)) || !command) {
+                this.error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+                throw new Error(`No ${commName} command found! Please, create it in LOOKin APP first!`);
+            }
+            let reqCheck = await httpRequest(IP, `${path}${command}`);
+            if (JSON.parse(reqCheck).success === 'false') {
+                this.error(`Failed to change the ${commName}! No connection to remote`);
+                throw new Error(`Failed to change the ${commName}! No connection to remote`);
+            }
+        }
 
         /**
          * exact commands may vary for different switches types (toggle, two singles or one single), so, we have to check it first
