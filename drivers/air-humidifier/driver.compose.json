@@ -5,15 +5,8 @@
   "class": "other",
   "capabilities": [
     "onoff",
-    "button"
+    "mode"
   ],
-  "capabilitiesOptions": {
-    "button": {
-      "title": "Mode",
-      "getable": false,
-      "type": "number"
-    }
-  },
   "platforms": [
     "local"
   ],

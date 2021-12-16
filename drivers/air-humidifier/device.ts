@@ -3,6 +3,7 @@ import {Functions, RCInfo} from "../../utilites/interfaces";
 import httpRequest from "../../utilites/httpRequest";
 import getPowerSwitchCommand from "../../utilites/getPowerSwitchCommand";
 import {emitter} from '../../utilites/UDPserver';
+import getNumberOfModes from "../../utilites/getNumberOfModes";
 
 class HumidifierDevice extends Homey.Device {
 
@@ -10,7 +11,7 @@ class HumidifierDevice extends Homey.Device {
      * onInit is called when the device is initialized.
      */
     async onInit() {
-        
+
         let UUID: string = this.getStoreValue('UUID');
         let IP: string = this.homey.env.LOOKinDevice.IP;
         let path: string = `/commands/ir/localremote/${UUID}`;
@@ -32,6 +33,35 @@ class HumidifierDevice extends Homey.Device {
         }
 
         await actualiseStatus();
+
+        /**
+         * We need to set an appropriate type of "mode" capability - it depends of it's type "single" or "toggle"
+         * Simple button is suitable for "single" type, but we need a picker UI component for "toggle" type
+         */
+
+        let numberOfModes: number = await getNumberOfModes(UUID, IP, this.getStoreValue('functions'));
+        if (numberOfModes === 1) {
+            await this.setCapabilityOptions('mode', {
+                title: {"en": "Mode"},
+                type: "number",
+                uiComponent: "button",
+                setable: true,
+                getable: false
+            });
+        } else if( numberOfModes > 1) {
+            let values: any[] = [];
+            for (let i = 0; i < numberOfModes; i++) {
+                values.push({id: i, title: {"en": `Mode${i}`}});
+            }
+            await this.setCapabilityOptions('mode', {
+                title: {"en": "Mode"},
+                type: "enum",
+                uiComponent: "picker",
+                setable: true,
+                getable: false,
+                values
+            })
+        }
 
         /**
          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
@@ -82,7 +112,7 @@ class HumidifierDevice extends Homey.Device {
             await sendRequest(powerCommand, '', 'power', IP, path);
         });
         //probably, here should be a picker instead of button!
-        this.registerCapabilityListener('button', async () => {
+        this.registerCapabilityListener('mode', async () => {
             await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
         });
 
