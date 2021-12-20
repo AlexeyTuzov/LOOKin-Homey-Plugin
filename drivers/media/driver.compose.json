@@ -6,7 +6,6 @@
   "capabilities": [
     "onoff",
     "volume_up",
-    "button",
     "volume_down",
     "volume_mute"
   ],

@@ -4,8 +4,7 @@
   },
   "class": "other",
   "capabilities": [
-    "onoff",
-    "mode"
+    "onoff"
   ],
   "platforms": [
     "local"

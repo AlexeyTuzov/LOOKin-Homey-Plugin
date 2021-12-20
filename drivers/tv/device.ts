@@ -3,6 +3,7 @@ import {emitter} from "../../utilites/UDPserver";
 import {Functions, RCInfo} from "../../utilites/interfaces";
 import httpRequest from "../../utilites/httpRequest";
 import getPowerSwitchCommand from "../../utilites/getPowerSwitchCommand";
+import getNumberOfModes from "../../utilites/getNumberOfModes";
 
 class TVDevice extends Homey.Device {
 
@@ -28,11 +29,52 @@ class TVDevice extends Homey.Device {
                 throw new Error('Failed to update status of device! No connection to remote');
             }
             await this.setStoreValue('status', RCInfo.Status).catch(this.error);
-            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/11\w{1,2}/)).catch(this.error);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status')[0].match(/1/)).catch(this.error);
             await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/)).catch(this.error);
         }
 
         await actualiseStatus();
+
+        /**
+         * We need to set an appropriate type of "mode" capability - it depends of it's type "single" or "toggle"
+         * Simple button is suitable for "single" type, but we need a picker UI component for "toggle" type
+         */
+
+        if (this.getStoreValue('functions').find((item: Functions) => item.Name === 'mode')) {
+            let numberOfModes: number = await getNumberOfModes(UUID, IP, this.getStoreValue('functions'));
+            switch (numberOfModes) {
+                case 1: {
+                    await this.addCapability('mode_btn');
+                    this.registerCapabilityListener('mode_btn', async () => {
+                        await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 2: {
+                    await this.addCapability('mode_2_picker');
+                    this.registerCapabilityListener('mode_2_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 3: {
+                    await this.addCapability('mode_3_picker');
+                    this.registerCapabilityListener('mode_3_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 4: {
+                    await this.addCapability('mode_4_picker');
+                    this.registerCapabilityListener('mode_4_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
 
         /**
          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
@@ -103,15 +145,15 @@ class TVDevice extends Homey.Device {
         });
 
         this.registerCapabilityListener('arrow_up_btn', async () => {
-           await sendRequest('0C02', 'cursor', 'arrow up', IP, path);
+            await sendRequest('0C02', 'cursor', 'arrow up', IP, path);
         });
 
         this.registerCapabilityListener('arrow_down_btn', async () => {
-           await sendRequest('0C04', 'cursor', 'arrow down', IP, path);
+            await sendRequest('0C04', 'cursor', 'arrow down', IP, path);
         });
 
         this.registerCapabilityListener('arrow_left_btn', async () => {
-           await sendRequest('0C01', 'cursor', 'arrow left', IP, path);
+            await sendRequest('0C01', 'cursor', 'arrow left', IP, path);
         });
 
         this.registerCapabilityListener('arrow_right_btn', async () => {
@@ -124,10 +166,6 @@ class TVDevice extends Homey.Device {
 
         this.registerCapabilityListener('menu_btn', async () => {
             await sendRequest('0DFF', 'menu', 'menu', IP, path);
-        });
-
-        this.registerCapabilityListener('mode_btn', async () => {
-           await sendRequest('04FF', 'mode', 'mode', IP, path);
         });
 
         this.log(`${name} has been initialized`);

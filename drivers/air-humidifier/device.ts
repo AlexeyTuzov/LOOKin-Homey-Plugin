@@ -29,7 +29,7 @@ class HumidifierDevice extends Homey.Device {
                 throw new Error('Failed to update status of device! No connection to remote');
             }
             await this.setStoreValue('status', RCInfo.Status).catch(this.error);
-            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/)).catch(this.error);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status')[0].match(/1/)).catch(this.error);
         }
 
         await actualiseStatus();
@@ -39,28 +39,40 @@ class HumidifierDevice extends Homey.Device {
          * Simple button is suitable for "single" type, but we need a picker UI component for "toggle" type
          */
 
-        let numberOfModes: number = await getNumberOfModes(UUID, IP, this.getStoreValue('functions'));
-        if (numberOfModes === 1) {
-            await this.setCapabilityOptions('mode', {
-                title: {"en": "Mode"},
-                type: "number",
-                uiComponent: "button",
-                setable: true,
-                getable: false
-            });
-        } else if( numberOfModes > 1) {
-            let values: any[] = [];
-            for (let i = 0; i < numberOfModes; i++) {
-                values.push({id: i, title: {"en": `Mode${i}`}});
+        if (this.getStoreValue('functions').find((item: Functions) => item.Name === 'mode')) {
+            let numberOfModes: number = await getNumberOfModes(UUID, IP, this.getStoreValue('functions'));
+            switch (numberOfModes) {
+                case 1: {
+                    await this.addCapability('mode_btn');
+                    this.registerCapabilityListener('mode_btn', async () => {
+                        await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 2: {
+                    await this.addCapability('mode_2_picker');
+                    this.registerCapabilityListener('mode_2_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 3: {
+                    await this.addCapability('mode_3_picker');
+                    this.registerCapabilityListener('mode_3_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 4: {
+                    await this.addCapability('mode_4_picker');
+                    this.registerCapabilityListener('mode_4_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                default:
+                    break;
             }
-            await this.setCapabilityOptions('mode', {
-                title: {"en": "Mode"},
-                type: "enum",
-                uiComponent: "picker",
-                setable: true,
-                getable: false,
-                values
-            })
         }
 
         /**
@@ -110,10 +122,6 @@ class HumidifierDevice extends Homey.Device {
         this.registerCapabilityListener('onoff', async (value: boolean) => {
             let powerCommand = getPowerSwitchCommand(value, this.getStoreValue('functions'));
             await sendRequest(powerCommand, '', 'power', IP, path);
-        });
-        //probably, here should be a picker instead of button!
-        this.registerCapabilityListener('mode', async () => {
-            await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
         });
 
         this.log(`${name} has been initialized`);

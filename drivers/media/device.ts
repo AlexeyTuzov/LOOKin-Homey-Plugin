@@ -1,8 +1,9 @@
 import Homey from 'homey';
 import getPowerSwitchCommand from '../../utilites/getPowerSwitchCommand';
 import httpRequest from '../../utilites/httpRequest';
-import { Functions, RCInfo } from '../../utilites/interfaces';
-import { emitter } from '../../utilites/UDPserver';
+import {Functions, RCInfo} from '../../utilites/interfaces';
+import {emitter} from '../../utilites/UDPserver';
+import getNumberOfModes from "../../utilites/getNumberOfModes";
 
 class MediaDevice extends Homey.Device {
 
@@ -28,11 +29,52 @@ class MediaDevice extends Homey.Device {
                 throw new Error('Failed to update status of device! No connection to remote');
             }
             await this.setStoreValue('status', RCInfo.Status).catch(this.error);
-            await this.setCapabilityValue('onoff', !!this.getStoreValue('status').match(/10\w{1,2}/)).catch(this.error);
+            await this.setCapabilityValue('onoff', !!this.getStoreValue('status')[0].match(/1/)).catch(this.error);
             await this.setCapabilityValue('volume_mute', !!this.getStoreValue('status').match(/\w{2}0\w/)).catch(this.error);
         }
 
         await actualiseStatus();
+
+        /**
+         * We need to set an appropriate type of "mode" capability - it depends of it's type "single" or "toggle"
+         * Simple button is suitable for "single" type, but we need a picker UI component for "toggle" type
+         */
+
+        if (this.getStoreValue('functions').find((item: Functions) => item.Name === 'mode')) {
+            let numberOfModes: number = await getNumberOfModes(UUID, IP, this.getStoreValue('functions'));
+            switch (numberOfModes) {
+                case 1: {
+                    await this.addCapability('mode_btn');
+                    this.registerCapabilityListener('mode_btn', async () => {
+                        await sendRequest('04FF', 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 2: {
+                    await this.addCapability('mode_2_picker');
+                    this.registerCapabilityListener('mode_2_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 3: {
+                    await this.addCapability('mode_3_picker');
+                    this.registerCapabilityListener('mode_3_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                case 4: {
+                    await this.addCapability('mode_4_picker');
+                    this.registerCapabilityListener('mode_4_picker', async (value) => {
+                        await sendRequest(`040${value}`, 'mode', 'Humidifier mode', IP, path);
+                    });
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
 
         /**
          * the next few lines looks for an "Update!" signal for this device, that might be received from LOOKin remote device via UDP
@@ -94,10 +136,6 @@ class MediaDevice extends Homey.Device {
             await sendRequest('05FF', 'mute', 'volume mute', IP, path);
         });
 
-        this.registerCapabilityListener('button', async () => {
-            await sendRequest('04FF', 'mode', 'source mode', IP, path);
-        });
-
         this.log(`${name} has been initialized`);
     }
 
@@ -117,7 +155,7 @@ class MediaDevice extends Homey.Device {
      * @param {string[]} event.changedKeys An array of keys changed since the previous version
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
-    async onSettings({ oldSettings: { }, newSettings: { }, changedKeys: { } }): Promise<string | void> {
+    async onSettings({oldSettings: {}, newSettings: {}, changedKeys: {}}): Promise<string | void> {
         let name = this.getName();
         this.log(`${name} settings were changed`);
     }

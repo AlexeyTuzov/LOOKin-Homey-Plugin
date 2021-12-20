@@ -84,16 +84,8 @@
       },
       "class": "other",
       "capabilities": [
-        "onoff",
-        "button"
+        "onoff"
       ],
-      "capabilitiesOptions": {
-        "button": {
-          "title": "Mode",
-          "getable": false,
-          "type": "number"
-        }
-      },
       "platforms": [
         "local"
       ],
@@ -162,7 +154,6 @@
       "capabilities": [
         "onoff",
         "volume_up",
-        "button",
         "volume_down",
         "volume_mute"
       ],
@@ -280,13 +271,12 @@
         "channel_down",
         "volume_down",
         "volume_mute",
-        "arrow_up_btn.tv",
-        "select_btn.tv",
-        "arrow_down_btn.tv",
-        "arrow_left_btn.tv",
-        "arrow_right_btn.tv",
-        "mode_btn.tv",
-        "menu_btn.tv"
+        "arrow_up_btn",
+        "select_btn",
+        "arrow_down_btn",
+        "arrow_left_btn",
+        "arrow_right_btn",
+        "menu_btn"
       ],
       "platforms": [
         "local"
@@ -470,6 +460,93 @@
       "getable": false,
       "setable": true,
       "icon": "assets/images/menu.svg"
+    },
+    "mode_2_picker": {
+      "title": {
+        "en": "Mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Mode 1"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Mode 2"
+          }
+        }
+      ]
+    },
+    "mode_3_picker": {
+      "title": {
+        "en": "Mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Mode 1"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Mode 2"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Mode 3"
+          }
+        }
+      ]
+    },
+    "mode_4_picker": {
+      "title": {
+        "en": "Mode"
+      },
+      "type": "enum",
+      "uiComponent": "picker",
+      "getable": false,
+      "setable": true,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Mode 1"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Mode 2"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Mode 3"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Mode 4"
+          }
+        }
+      ]
     },
     "mode_btn": {
       "title": {
