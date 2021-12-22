@@ -1,0 +1,8 @@
+{
+  "title": { "en": "Swing Mode 2"},
+  "type": "boolean",
+  "uiComponent": "button",
+  "getable": false,
+  "setable": true,
+  "icon": "assets/images/mode.svg"
+}

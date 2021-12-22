@@ -114,6 +114,74 @@
     },
     {
       "name": {
+        "en": "air-purifier"
+      },
+      "class": "other",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/air-purifier/assets/images/small.png",
+        "large": "/drivers/air-purifier/assets/images/large.png",
+        "xlarge": "/drivers/air-purifier/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "air-purifier"
+    },
+    {
+      "name": {
+        "en": "fan"
+      },
+      "class": "fan",
+      "capabilities": [
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/fan/assets/images/small.png",
+        "large": "/drivers/fan/assets/images/large.png",
+        "xlarge": "/drivers/fan/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "fan"
+    },
+    {
+      "name": {
         "en": "Light"
       },
       "class": "light",
@@ -566,6 +634,64 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true
+    },
+    "speed_btn": {
+      "title": {
+        "en": "Speed"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true
+    },
+    "speed_down_btn": {
+      "title": {
+        "en": "Speed Down"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true,
+      "icon": "assets/images/arrow_down.svg"
+    },
+    "speed_up_btn": {
+      "title": {
+        "en": "Speed Up"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true,
+      "icon": "assets/images/arrow_up.svg"
+    },
+    "swing_btn": {
+      "title": {
+        "en": "Swing"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true
+    },
+    "swing_mode1_btn": {
+      "title": {
+        "en": "Swing Mode 1"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true,
+      "icon": "assets/images/mode.svg"
+    },
+    "swing_mode2_btn": {
+      "title": {
+        "en": "Swing Mode 2"
+      },
+      "type": "boolean",
+      "uiComponent": "button",
+      "getable": false,
+      "setable": true,
+      "icon": "assets/images/mode.svg"
     }
   }
 }

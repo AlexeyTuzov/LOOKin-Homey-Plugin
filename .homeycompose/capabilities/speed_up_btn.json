@@ -1,0 +1,8 @@
+{
+  "title": { "en": "Speed Up"},
+  "type": "boolean",
+  "uiComponent": "button",
+  "getable": false,
+  "setable": true,
+  "icon": "assets/images/arrow_up.svg"
+}
