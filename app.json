@@ -28,6 +28,8 @@
     "name": "Alex Tuzov",
     "email": "aresnexus@rambler.ru"
   },
+  "homepage": "https://look-in.club",
+  "support": "mailto:aresnexus@rambler.ru",
   "drivers": [
     {
       "name": {
@@ -114,7 +116,7 @@
     },
     {
       "name": {
-        "en": "air-purifier"
+        "en": "Air-purifier"
       },
       "class": "other",
       "capabilities": [
@@ -148,7 +150,7 @@
     },
     {
       "name": {
-        "en": "fan"
+        "en": "Fan"
       },
       "class": "fan",
       "capabilities": [
