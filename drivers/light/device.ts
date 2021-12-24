@@ -7,9 +7,6 @@ import actualiseFunctions from "../../utilites/homey_device_hooks/actualiseFunct
 
 class LightBulbDevice extends Homey.Device {
 
-    /**
-     * onInit is called when the device is initialized.
-     */
     async onInit() {
 
         let UUID: string = this.getStoreValue('UUID');

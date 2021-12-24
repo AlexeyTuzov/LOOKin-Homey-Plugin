@@ -8,9 +8,6 @@ import checkAndRegisterModeListener from "../../utilites/homey_device_hooks/chec
 
 class HumidifierDevice extends Homey.Device {
 
-    /**
-     * onInit is called when the device is initialized.
-     */
     async onInit() {
 
         let UUID: string = this.getStoreValue('UUID');

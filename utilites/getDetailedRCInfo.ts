@@ -1,5 +1,5 @@
-import {RCInfo, RemoteController} from "./interfaces";
-import * as http from 'http';
+import {RemoteController} from "./interfaces";
+import httpRequest from "./httpRequest";
 
 interface RCitem {
     Type: string,
@@ -11,7 +11,7 @@ const getDetailedRCInfo = async (data: RCitem[], IP: string): Promise<RemoteCont
     let result: RemoteController[] = [];
 
     for await (let item of data) {
-        let info = await getInfo(IP, item.UUID);
+        let info = JSON.parse(await httpRequest(IP, `/data/${item.UUID}`));
         result.push({
             Type: item.Type,
             UUID: item.UUID,
@@ -21,28 +21,6 @@ const getDetailedRCInfo = async (data: RCitem[], IP: string): Promise<RemoteCont
         });
     }
     return result;
-}
-
-const getInfo = async (IP: string, UUID: string): Promise<RCInfo> => {
-
-    return new Promise( (resolve, reject) => {
-
-        http.get({host: IP, path:`/data/${UUID}`}, res => {
-            let data: string = '';
-
-            res.on('data', chunk => {
-                data += chunk;
-            });
-
-            res.on('end', () => {
-                resolve(JSON.parse(data));
-            });
-
-            res.on('error', err => {
-                reject(console.log('Error getting info from one of saved remotes', err.stack));
-            });
-        });
-    });
 }
 
 export default getDetailedRCInfo;

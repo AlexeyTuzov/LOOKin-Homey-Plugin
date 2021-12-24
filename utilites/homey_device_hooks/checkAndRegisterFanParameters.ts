@@ -2,6 +2,11 @@ import {Device} from "homey";
 import {Functions} from "../interfaces";
 import sendRequest from "./sendRequest";
 
+/**
+ * We need to set an appropriate type of such characteristics like 'speed' and 'swing' for fan-like devices
+ * Single button is suitable for "single" type, but we need two buttons for "toggle" type - because of two different signals
+ */
+
 const checkAndRegisterFanParameters = async (device: Device,
                                              characteristic: string,
                                              IP: string,

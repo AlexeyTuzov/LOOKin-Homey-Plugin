@@ -9,9 +9,6 @@ import checkAndRegisterFanParameters from "../../utilites/homey_device_hooks/che
 
 class PurifierDevice extends Homey.Device {
 
-    /**
-     * onInit is called when the device is initialized.
-     */
     async onInit() {
 
         let UUID: string = this.getStoreValue('UUID');

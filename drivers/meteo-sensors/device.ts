@@ -3,9 +3,6 @@ import {emitter} from "../../utilites/UDPserver";
 
 class MeteoSensor extends Homey.Device {
 
-    /**
-     * onInit is called when the device is initialized.
-     */
     async onInit() {
 
         let name: string = this.getName();
@@ -37,7 +34,7 @@ class MeteoSensor extends Homey.Device {
     async onRenamed(name: string) {
         this.log(`Sensors was renamed to ${name}`);
     }
-    
+
     async onDeleted() {
         let name: string = this.getName();
         this.log(`${name} has been deleted`);

@@ -44,7 +44,7 @@ export interface pairingInfo {
     };
 }
 
-export interface device {
+export interface DeviceFullInfo {
     Type: string,
     MRDC: string,
     Status: string,

@@ -3,17 +3,10 @@ import {pairingInfo, RemoteController} from "../../utilites/interfaces";
 
 class LightBulbDriver extends Homey.Driver {
 
-    /**
-     * onInit is called when the driver is initialized.
-     */
     async onInit() {
         this.log('Light Bulb Driver has been initialised!');
     }
 
-    /**
-     * onPairListDevices is called when a user is adding a device and the 'list_devices' view is called.
-     * This should return an array with the data of devices that are available for pairing.
-     */
     async onPairListDevices() {
         let devicesList: pairingInfo[] = [];
         try {
