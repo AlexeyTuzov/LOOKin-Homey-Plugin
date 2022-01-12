@@ -4,5 +4,5 @@
   "uiComponent": "button",
   "getable": false,
   "setable": true,
-  "icon": "assets/images/mode.svg"
+  "icon": "assets/icons/mode.svg"
 }

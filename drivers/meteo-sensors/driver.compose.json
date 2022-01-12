@@ -13,6 +13,11 @@
   "connectivity": [
     "lan"
   ],
+  "images": {
+    "small": "drivers/meteo-sensors/assets/Images/small.png",
+    "large": "drivers/meteo-sensors/assets/Images/large.png",
+    "xlarge": "drivers/meteo-sensors/assets/Images/xlarge.png"
+  },
   "pair": [
     {
       "id": "list_devices",

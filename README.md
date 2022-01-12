@@ -1,13 +1,10 @@
-# LOOK.in remote
+Integrates LOOKin devices into Athom Homey.
+LOOKin focuses on providing devices that integrate with a local api and can be used internet free.
 
-Для установки плагина с GitHub на Homey следуйте инструкциям по ссылке ниже:
-https://sprut.ai/client/article/60
+Supported devices:
+LOOKin Remote2: internet free Wi-Fi+IR Smart Home Control
 
-Для начала работы:
-1) создайте необходимые пульты для Ваших устройств в LOOKin APP
-2) запустите приложение Homey, при инициализации оно получит информацию о сохранённых пультах
-3) в Homey APP перейдите во вкладку Devices и дальше в меню добавления новых устройств(значок "+" в правом верхнем углу)
-4) выберите приложение из списка (LOOK.in remote)
-5) выберите тип нужного Вам пульта, при этом откроется меню, позволяющее выбрать какие из сохранённых пультов этого типа нужно добавить (по умолчанию - все)
-6) для каждого из типов пультов нужно повторить пункты 3-5
+Configuration:
+LOOKin devices can be auto-discovered by Athom Homey.
+No special additional settings required
 

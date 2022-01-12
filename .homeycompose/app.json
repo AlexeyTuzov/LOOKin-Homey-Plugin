@@ -7,10 +7,10 @@
     "local"
   ],
   "name": {
-    "en": "LOOK.in remote"
+    "en": "LOOKin"
   },
   "description": {
-    "en": "Adds support for LOOK.in remote devices"
+    "en": "Make your IR devices smart"
   },
   "category": [
     "tools"
@@ -22,7 +22,7 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "Alex Tuzov",
+    "name": "Alexey Tuzov",
     "email": "aresnexus@rambler.ru"
   },
   "homepage": "https://look-in.club",

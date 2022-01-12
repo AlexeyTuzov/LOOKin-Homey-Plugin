@@ -24,6 +24,11 @@
   "connectivity": [
     "lan"
   ],
+  "images": {
+    "small": "drivers/air-conditioner/assets/Images/small.png",
+    "large": "drivers/air-conditioner/assets/Images/large.png",
+    "xlarge": "drivers/air-conditioner/assets/Images/xlarge.png"
+  },
   "pair": [
     {
       "id": "list_devices",

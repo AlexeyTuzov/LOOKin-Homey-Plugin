@@ -12,6 +12,11 @@
   "connectivity": [
     "lan"
   ],
+  "images": {
+    "small": "drivers/switch/assets/Images/small.png",
+    "large": "drivers/switch/assets/Images/large.png",
+    "xlarge": "drivers/switch/assets/Images/xlarge.png"
+  },
   "pair": [
     {
       "id": "list_devices",

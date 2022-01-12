@@ -23,6 +23,11 @@
   "connectivity": [
     "lan"
   ],
+  "images": {
+    "small": "drivers/tv/assets/Images/small.png",
+    "large": "drivers/tv/assets/Images/large.png",
+    "xlarge": "drivers/tv/assets/Images/xlarge.png"
+  },
   "pair": [
     {
       "id": "list_devices",

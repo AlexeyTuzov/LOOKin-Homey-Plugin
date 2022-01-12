@@ -4,5 +4,5 @@
   "uiComponent": "button",
   "getable": false,
   "setable": true,
-  "icon": "assets/images/arrow_right.svg"
+  "icon": "assets/icons/arrow_right.svg"
 }
