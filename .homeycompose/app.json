@@ -15,6 +15,7 @@
   "category": [
     "tools"
   ],
+  "brandColor": "#63BD5C",
   "permissions": ["homey:manager:api"],
   "images": {
     "small": "/assets/images/small.png",

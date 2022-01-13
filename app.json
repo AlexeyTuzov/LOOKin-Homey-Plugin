@@ -8,10 +8,10 @@
     "local"
   ],
   "name": {
-    "en": "LOOK.in remote"
+    "en": "LOOKin"
   },
   "description": {
-    "en": "Adds support for LOOK.in remote devices"
+    "en": "Make your IR devices smart"
   },
   "category": [
     "tools"
@@ -25,7 +25,7 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "Alex Tuzov",
+    "name": "Alexey Tuzov",
     "email": "aresnexus@rambler.ru"
   },
   "homepage": "https://look-in.club",
@@ -58,9 +58,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/air-conditioner/assets/images/small.png",
-        "large": "/drivers/air-conditioner/assets/images/large.png",
-        "xlarge": "/drivers/air-conditioner/assets/images/xlarge.png"
+        "small": "drivers/air-conditioner/assets/Images/small.png",
+        "large": "drivers/air-conditioner/assets/Images/large.png",
+        "xlarge": "drivers/air-conditioner/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -92,9 +92,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/air-humidifier/assets/images/small.png",
-        "large": "/drivers/air-humidifier/assets/images/large.png",
-        "xlarge": "/drivers/air-humidifier/assets/images/xlarge.png"
+        "small": "drivers/air-humidifier/assets/Images/small.png",
+        "large": "drivers/air-humidifier/assets/Images/large.png",
+        "xlarge": "drivers/air-humidifier/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -126,9 +126,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/air-purifier/assets/images/small.png",
-        "large": "/drivers/air-purifier/assets/images/large.png",
-        "xlarge": "/drivers/air-purifier/assets/images/xlarge.png"
+        "small": "drivers/air-purifier/assets/Images/small.png",
+        "large": "drivers/air-purifier/assets/Images/large.png",
+        "xlarge": "drivers/air-purifier/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -160,9 +160,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/fan/assets/images/small.png",
-        "large": "/drivers/fan/assets/images/large.png",
-        "xlarge": "/drivers/fan/assets/images/xlarge.png"
+        "small": "drivers/fan/assets/Images/small.png",
+        "large": "drivers/fan/assets/Images/large.png",
+        "xlarge": "drivers/fan/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -194,9 +194,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/light/assets/images/small.png",
-        "large": "/drivers/light/assets/images/large.png",
-        "xlarge": "/drivers/light/assets/images/xlarge.png"
+        "small": "drivers/light/assets/Images/small.png",
+        "large": "drivers/light/assets/Images/large.png",
+        "xlarge": "drivers/light/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -238,9 +238,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/media/assets/images/small.png",
-        "large": "/drivers/media/assets/images/large.png",
-        "xlarge": "/drivers/media/assets/images/xlarge.png"
+        "small": "drivers/media/assets/Images/small.png",
+        "large": "drivers/media/assets/Images/large.png",
+        "xlarge": "drivers/media/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -273,9 +273,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/meteo-sensors/assets/images/small.png",
-        "large": "/drivers/meteo-sensors/assets/images/large.png",
-        "xlarge": "/drivers/meteo-sensors/assets/images/xlarge.png"
+        "small": "drivers/meteo-sensors/assets/Images/small.png",
+        "large": "drivers/meteo-sensors/assets/Images/large.png",
+        "xlarge": "drivers/meteo-sensors/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -307,9 +307,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/switch/assets/images/small.png",
-        "large": "/drivers/switch/assets/images/large.png",
-        "xlarge": "/drivers/switch/assets/images/xlarge.png"
+        "small": "drivers/switch/assets/Images/small.png",
+        "large": "drivers/switch/assets/Images/large.png",
+        "xlarge": "drivers/switch/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -352,9 +352,9 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/tv/assets/images/small.png",
-        "large": "/drivers/tv/assets/images/large.png",
-        "xlarge": "/drivers/tv/assets/images/xlarge.png"
+        "small": "drivers/tv/assets/Images/small.png",
+        "large": "drivers/tv/assets/Images/large.png",
+        "xlarge": "drivers/tv/assets/Images/xlarge.png"
       },
       "pair": [
         {
@@ -486,7 +486,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_down.svg"
+      "icon": "assets/icons/arrow_down.svg"
     },
     "arrow_left_btn": {
       "title": {
@@ -496,7 +496,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_left.svg"
+      "icon": "assets/icons/arrow_left.svg"
     },
     "arrow_right_btn": {
       "title": {
@@ -506,7 +506,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_right.svg"
+      "icon": "assets/icons/arrow_right.svg"
     },
     "arrow_up_btn": {
       "title": {
@@ -516,7 +516,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_up.svg"
+      "icon": "assets/icons/arrow_up.svg"
     },
     "menu_btn": {
       "title": {
@@ -526,7 +526,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/menu.svg"
+      "icon": "assets/icons/menu.svg"
     },
     "mode_2_picker": {
       "title": {
@@ -623,7 +623,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/mode.svg"
+      "icon": "assets/icons/mode.svg"
     },
     "select_btn": {
       "title": {
@@ -651,7 +651,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_down.svg"
+      "icon": "assets/icons/arrow_down.svg"
     },
     "speed_up_btn": {
       "title": {
@@ -661,7 +661,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/arrow_up.svg"
+      "icon": "assets/icons/arrow_up.svg"
     },
     "swing_btn": {
       "title": {
@@ -680,7 +680,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/mode.svg"
+      "icon": "assets/icons/mode.svg"
     },
     "swing_mode2_btn": {
       "title": {
@@ -690,7 +690,7 @@
       "uiComponent": "button",
       "getable": false,
       "setable": true,
-      "icon": "assets/images/mode.svg"
+      "icon": "assets/icons/mode.svg"
     }
   }
 }
