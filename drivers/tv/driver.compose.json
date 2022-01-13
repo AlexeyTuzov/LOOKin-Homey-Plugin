@@ -24,9 +24,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/tv/assets/Images/small.png",
-    "large": "drivers/tv/assets/Images/large.png",
-    "xlarge": "drivers/tv/assets/Images/xlarge.png"
+    "small": "drivers/tv/assets/images/small.png",
+    "large": "drivers/tv/assets/images/large.png",
+    "xlarge": "drivers/tv/assets/images/xlarge.png"
   },
   "pair": [
     {

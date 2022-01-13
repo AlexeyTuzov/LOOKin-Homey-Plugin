@@ -13,9 +13,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/air-humidifier/assets/Images/small.png",
-    "large": "drivers/air-humidifier/assets/Images/large.png",
-    "xlarge": "drivers/air-humidifier/assets/Images/xlarge.png"
+    "small": "drivers/air-humidifier/assets/images/small.png",
+    "large": "drivers/air-humidifier/assets/images/large.png",
+    "xlarge": "drivers/air-humidifier/assets/images/xlarge.png"
   },
   "pair": [
     {

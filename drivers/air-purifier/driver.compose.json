@@ -13,9 +13,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/air-purifier/assets/Images/small.png",
-    "large": "drivers/air-purifier/assets/Images/large.png",
-    "xlarge": "drivers/air-purifier/assets/Images/xlarge.png"
+    "small": "drivers/air-purifier/assets/images/small.png",
+    "large": "drivers/air-purifier/assets/images/large.png",
+    "xlarge": "drivers/air-purifier/assets/images/xlarge.png"
   },
   "pair": [
     {

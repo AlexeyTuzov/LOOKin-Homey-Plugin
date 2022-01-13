@@ -14,9 +14,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/meteo-sensors/assets/Images/small.png",
-    "large": "drivers/meteo-sensors/assets/Images/large.png",
-    "xlarge": "drivers/meteo-sensors/assets/Images/xlarge.png"
+    "small": "drivers/meteo-sensors/assets/images/small.png",
+    "large": "drivers/meteo-sensors/assets/images/large.png",
+    "xlarge": "drivers/meteo-sensors/assets/images/xlarge.png"
   },
   "pair": [
     {

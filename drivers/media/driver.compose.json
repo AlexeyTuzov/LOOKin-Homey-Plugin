@@ -23,9 +23,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/media/assets/Images/small.png",
-    "large": "drivers/media/assets/Images/large.png",
-    "xlarge": "drivers/media/assets/Images/xlarge.png"
+    "small": "drivers/media/assets/images/small.png",
+    "large": "drivers/media/assets/images/large.png",
+    "xlarge": "drivers/media/assets/images/xlarge.png"
   },
   "pair": [
     {

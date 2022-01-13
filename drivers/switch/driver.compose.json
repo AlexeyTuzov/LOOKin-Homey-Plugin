@@ -13,9 +13,9 @@
     "lan"
   ],
   "images": {
-    "small": "drivers/switch/assets/Images/small.png",
-    "large": "drivers/switch/assets/Images/large.png",
-    "xlarge": "drivers/switch/assets/Images/xlarge.png"
+    "small": "drivers/switch/assets/images/small.png",
+    "large": "drivers/switch/assets/images/large.png",
+    "xlarge": "drivers/switch/assets/images/xlarge.png"
   },
   "pair": [
     {
