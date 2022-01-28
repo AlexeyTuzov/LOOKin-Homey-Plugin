@@ -5,5 +5,5 @@ Supported devices:
 LOOKin Remote2: internet free Wi-Fi+IR Smart Home Control
 
 Configuration:
-LOOKin devices can be auto-discovered bys Homey.
+LOOKin devices can be auto-discovered by Homey.
 No special additional settings required
